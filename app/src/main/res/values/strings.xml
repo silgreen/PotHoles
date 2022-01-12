@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">PotHoles</string>
+    <string name="editTextUsernameHint">Username</string>
+    <string name="registerButton">Registrati</string>
+    <string name="welcomeMessage">Benvenuto in PotHoles!</string>
+    <string name="editTextUsernameLabel">Inserisci una Username per cominciare ad utilizzare l\'applicazione</string>
+    <string name="tabTextRileva">Rileva</string>
+    <string name="tabTextEventi">Eventi</string>
+    <string name="welcomeHomeMessage">Benvenuto, %1$s</string>
 </resources>
