@@ -25,4 +25,8 @@
     <style name="tabTextFont" parent="android:Widget.ActionBar.TabText">
         <item name="android:fontFamily">@font/nunito</item>
     </style>
+
+    <style name="menuFont" parent="android:Widget.PopupMenu">
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
 </resources>

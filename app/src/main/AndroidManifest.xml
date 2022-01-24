@@ -10,18 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PotHoles">
         <activity
+            android:name=".HomePage"
+            android:exported="true"
+            android:label="@string/title_activity_home_page">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
             android:name=".RegisterUsernameActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.RUN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.RUN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
