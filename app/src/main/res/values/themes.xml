@@ -19,10 +19,10 @@
     <style name="textFont" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/nunito</item>
     </style>
-    <style name="buttonFont" parent="android:Widget.Button">
+    <style name="buttonFont" parent="android:TextAppearance.StatusBar.Title">
         <item name="android:fontFamily">@font/nunito</item>
     </style>
-    <style name="tabTextFont" parent="android:Widget.ActionBar.TabText">
+    <style name="tabTextFont" parent="android:Widget.ListView.Menu">
         <item name="android:fontFamily">@font/nunito</item>
     </style>
 

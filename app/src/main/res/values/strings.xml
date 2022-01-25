@@ -9,5 +9,8 @@
     <string name="welcomeHomeMessage">Benvenuto, %1$s</string>
     <string name="title_activity_home_page">HomePage</string>
     <string name="title_home">Home</string>
-    <string name="eventi_rilevati" >Eventi rilevati</string>
+    <string name="eventi_rilevati">Eventi rilevati</string>
+    <string name="rilevazione_text">Rilevazione in Corso...</string>
+    <string name="interrompi_text">Interrompi</string>
+    <string name="logout_text">Logout</string>
 </resources>

@@ -28,7 +28,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.eventiView
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textView = view.findViewById(R.id.textView);
+            textView = view.findViewById(R.id.itemText);
           //  textView2 = view.findViewById(R.id.textView3);
 
         }
