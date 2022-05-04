@@ -6,7 +6,7 @@
     <string name="editTextUsernameLabel">Inserisci una Username per cominciare ad utilizzare l\'applicazione</string>
     <string name="TextRileva">Rileva</string>
     <string name="TextEventi">Eventi</string>
-    <string name="welcomeHomeMessage">Benvenuto, %1$s</string>
+    <string name="welcomeHomeMessage">Benvenuto,</string>
     <string name="title_activity_home_page">HomePage</string>
     <string name="title_home">Home</string>
     <string name="eventi_rilevati">Eventi rilevati</string>
