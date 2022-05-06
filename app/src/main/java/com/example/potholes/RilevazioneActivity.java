@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import com.example.potholes.services.RilevazioneService;
 
 public class RilevazioneActivity extends AppCompatActivity {
 
@@ -20,5 +23,16 @@ public class RilevazioneActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewEventiRilevazione);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new RilevazioneEventiAdapter(dati));
+
+        RilevazioneService rilevazioneService = new RilevazioneService(this);
+        rilevazioneService.startRilevazione();
+
+        Button interrompiButton= findViewById(R.id.interrompiButton);
+        interrompiButton.setOnClickListener(v-> {
+            rilevazioneService.stopRilevazione();
+            //Intent intent = new Intent(this,HomePage.class);
+            //startActivity(intent);
+
+        });
     }
 }
