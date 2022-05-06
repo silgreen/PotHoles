@@ -37,7 +37,7 @@ public class EventiFragment extends Fragment {
         s.add("ciccio");
         s.add("banan");
         View view = inflater.inflate(R.layout.eventi_fragment, container, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerViewEventi);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(new CustomAdapter(s));
 

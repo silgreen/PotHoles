@@ -1,16 +1,20 @@
 package com.example.potholes;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainer;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.potholes.services.RilevazioneService;
+import com.example.potholes.ui.eventi.EventiFragment;
+import com.example.potholes.ui.rilevazione.RilevazioneFragment;
 
 public class RilevazioneActivity extends AppCompatActivity {
 
@@ -19,20 +23,5 @@ public class RilevazioneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rilevazione);
 
-        String [] dati = new String[] {"mela","banana","caffè"};
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewEventiRilevazione);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RilevazioneEventiAdapter(dati));
-
-        RilevazioneService rilevazioneService = new RilevazioneService(this);
-        rilevazioneService.startRilevazione();
-
-        Button interrompiButton= findViewById(R.id.interrompiButton);
-        interrompiButton.setOnClickListener(v-> {
-            rilevazioneService.stopRilevazione();
-            //Intent intent = new Intent(this,HomePage.class);
-            //startActivity(intent);
-
-        });
     }
 }
