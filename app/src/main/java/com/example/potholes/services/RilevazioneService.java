@@ -7,6 +7,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 
@@ -39,9 +42,6 @@ public class RilevazioneService{
                 Log.d("UP","sto salendo "+ alpha);
                 Log.d("MAX", max + "");
             }
-
-
-
         }
 
         @Override
@@ -68,4 +68,6 @@ public class RilevazioneService{
     public double getMin() {
         return min;
     }
+
+
 }

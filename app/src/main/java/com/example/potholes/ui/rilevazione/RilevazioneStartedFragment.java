@@ -51,6 +51,7 @@ public class RilevazioneStartedFragment extends Fragment {
                     setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
         });
+
         return view;
     }
 
