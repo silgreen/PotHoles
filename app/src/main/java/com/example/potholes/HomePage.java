@@ -1,11 +1,17 @@
 package com.example.potholes;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -14,12 +20,18 @@ import android.view.MenuInflater;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -46,15 +58,12 @@ public class HomePage extends AppCompatActivity {
     LocationRequest locationRequest;
     LocationCallback locationCallback;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         binding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -68,34 +77,52 @@ public class HomePage extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setFastestInterval(0);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                for (Location location:locationResult.getLocations()) {
+                    Log.d("LocationCAllback ", location.getLatitude() + "::" + location.getLongitude());
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),permesso->{
                 if(!permesso) {
                     Toast.makeText(this, "Senza i permessi non è possibile utilizzare l'app", Toast.LENGTH_SHORT).show();
                 }
             });
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    Log.d("LOCATION", location.getLatitude() + "::" + location.getLongitude());
+                    Geocoder geocoder = new Geocoder(getApplicationContext());
+                    Address address = new Address(Locale.ITALIAN);
+                    try {
+                        address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
+                        Log.d("Indirizzo", address.getAddressLine(0));
+                        Log.d("city", geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).toString());
 
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if (location != null) {
-                Log.d("LOCATION", location.getLatitude() + "::" + location.getLongitude());
-                Geocoder geocoder = new Geocoder(getApplicationContext());
-                Address address = new Address(Locale.ITALIAN);
-                try {
-                    address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
-                    Log.d("Indirizzo", address.getAddressLine(0));
-                    Log.d("city", geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).toString());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException  e ) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-
+            });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,4 +131,14 @@ public class HomePage extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocation();
+    }
+
+    @SuppressLint("MissingPermission")
+    public void startLocation(){
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback,Looper.getMainLooper());
+    }
 }
