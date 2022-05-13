@@ -18,6 +18,7 @@ public class RilevazioneService{
     private final Sensor sensor;
     double max;
     double min;
+    private PosizioneService posizioneService;
 
     private final SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
@@ -30,25 +31,29 @@ public class RilevazioneService{
             BigDecimal bigDecimal = new BigDecimal(radix, new MathContext(3));
             double g = 9.81;
             double alpha = bigDecimal.doubleValue() - g;
-            if(alpha == 0) ;
-
-            if(alpha < 0){
+            if (alpha >=-3 && alpha<-1){
+                posizioneService.startLocation();
                 min = Math.min(min,alpha);
                 Log.d("DOWN","sto cadendo " + alpha );
                 Log.d("MIN", min + "");
-
-            }else if(alpha > 0){
+            }
+            if (alpha <=3 && alpha >1) {
+                posizioneService.startLocation();
                 max = Math.max(max,alpha);
                 Log.d("UP","sto salendo "+ alpha);
                 Log.d("MAX", max + "");
+
             }
+
+
         }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
     };
-    public RilevazioneService(Context context){
+    public RilevazioneService(Context context,PosizioneService posizioneService){
+        this.posizioneService = posizioneService;
         sensorManager=(SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
@@ -60,14 +65,5 @@ public class RilevazioneService{
     public void stopRilevazione(){
         sensorManager.unregisterListener(sensorEventListener,sensor);
     }
-
-    public double getMax() {
-        return max;
-    }
-
-    public double getMin() {
-        return min;
-    }
-
 
 }

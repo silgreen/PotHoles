@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.potholes.R;
+import com.example.potholes.services.PosizioneService;
 import com.example.potholes.services.RilevazioneService;
 
 public class RilevazioneStartedFragment extends Fragment {
@@ -33,7 +34,8 @@ public class RilevazioneStartedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.rilevazione_started_fragment, container, false);
-        RilevazioneService rilevazioneService = new RilevazioneService(view.getContext());
+        PosizioneService posizioneService = new PosizioneService(view.getContext());
+        RilevazioneService rilevazioneService = new RilevazioneService(view.getContext(),posizioneService);
         rilevazioneService.startRilevazione();
 
 
@@ -44,9 +46,6 @@ public class RilevazioneStartedFragment extends Fragment {
         Button interrompiButton= view.findViewById(R.id.rilevaButtonFragment);
         interrompiButton.setOnClickListener(v-> {
             rilevazioneService.stopRilevazione();
-            //Intent intent = new Intent(this,HomePage.class);
-            //startActivity(intent);
-
             fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneFragment.class,null).
                     setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
