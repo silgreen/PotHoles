@@ -7,9 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.example.potholes.communication.SocketClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
@@ -18,7 +20,7 @@ public class RilevazioneService{
     private final Sensor sensor;
     double max;
     double min;
-    private PosizioneService posizioneService;
+    private final PosizioneService posizioneService;
 
     private final SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
@@ -42,7 +44,6 @@ public class RilevazioneService{
                 max = Math.max(max,alpha);
                 Log.d("UP","sto salendo "+ alpha);
                 Log.d("MAX", max + "");
-
             }
 
 

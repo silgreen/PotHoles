@@ -19,6 +19,7 @@ import android.widget.Button;
 
 import com.example.potholes.R;
 import com.example.potholes.RilevazioneEventiAdapter;
+import com.example.potholes.communication.SocketClient;
 import com.example.potholes.ui.eventi.CustomAdapter;
 
 public class RilevazioneFragment extends Fragment {

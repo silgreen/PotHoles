@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.potholes.R;
+import com.example.potholes.communication.SocketClient;
 import com.example.potholes.services.PosizioneService;
 import com.example.potholes.services.RilevazioneService;
 
@@ -34,6 +35,8 @@ public class RilevazioneStartedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.rilevazione_started_fragment, container, false);
+        SocketClient socketClient = new SocketClient(view.getContext());
+        socketClient.sogliaRequest();
         PosizioneService posizioneService = new PosizioneService(view.getContext());
         RilevazioneService rilevazioneService = new RilevazioneService(view.getContext(),posizioneService);
         rilevazioneService.startRilevazione();
