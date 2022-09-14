@@ -13,4 +13,6 @@
     <string name="rilevazione_text">Rilevazione in Corso...</string>
     <string name="interrompi_text">Interrompi</string>
     <string name="logout_text">Logout</string>
+    <string name="eventi_rilevati_nell_ultima_sessione">Eventi rilevati nell\'ultima sessione</string>
+    <string name="sample">sample</string>
 </resources>

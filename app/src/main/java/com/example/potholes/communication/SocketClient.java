@@ -4,41 +4,70 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.potholes.RilevazioneEventiAdapter;
+import com.example.potholes.entity.Evento;
+import com.example.potholes.ui.rilevazione.RilevazioneViewModel;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.Buffer;
-import java.nio.CharBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SocketClient {
     private final Context context;
-    private final String SOGLIA = "soglia";
-    private final String EVENTO = "evento";
     private final String LISTA = "lista";
+    private BufferedReader reader;
+    private PrintWriter writer;
+    private Socket socket;
+    private List<Evento> eventoList;
 
     public SocketClient(Context context) {
         this.context = context;
+        eventoList = new ArrayList<>();
     }
 
-    private String getUsernameFromPreferences() {
+    private final Runnable sogliaThread = () -> {
+        initSocket();
+        sendUsername();
+        if(checkResponseOK()) {
+            richiestaSoglia();
+            leggiSoglia();
+        }
+        socket = null;
+    };
+
+    private void initSocket() {
+        if(socket == null) {
+            try {
+                InetAddress serverAddress = InetAddress.getByName("172.21.3.27");
+                socket = new Socket(serverAddress,8080);
+                writer = new PrintWriter(socket.getOutputStream(),true);
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Evento> getEventoList() {
+        return eventoList;
+    }
+
+    public String getUsernameFromPreferences() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("info",Context.MODE_PRIVATE);
         return sharedPreferences.getString("username","UTENTE");
     }
 
-    private void sendUsername(PrintWriter writer) {
-            Log.d("sono sendUsername",getUsernameFromPreferences());
-            writer.println(getUsernameFromPreferences());
+    private void sendUsername() {
+        String username = getUsernameFromPreferences();
+        writer.println(username);
     }
 
-    private boolean checkResponseOK(BufferedReader reader) {
+    private boolean checkResponseOK() {
         String response = "";
         try {
             response = reader.readLine();
@@ -48,11 +77,12 @@ public class SocketClient {
         return response.equals("ok");
     }
 
-    private void inviaSoglia(PrintWriter writer) {
-            writer.println(SOGLIA);
+    private void richiestaSoglia() {
+        final String SOGLIA = "soglia";
+        writer.println(SOGLIA);
     }
 
-    private void leggiSoglia(BufferedReader reader) {
+    private void leggiSoglia() {
         String soglia = "";
         try {
             soglia = reader.readLine();
@@ -69,26 +99,35 @@ public class SocketClient {
         editor.apply();
     }
 
-    public void sogliaRequest() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    InetAddress serverAddress = InetAddress.getByName("172.18.227.0");
-                    Socket socket = new Socket(serverAddress,8080);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    PrintWriter writer = new PrintWriter(socket.getOutputStream());
-                    //sendUsername(writer);
-                    writer.println("mario");
-                    //if(checkResponseOK(reader)) {
-                        //inviaSoglia(writer);
-                        //leggiSoglia(reader);
-                    //}
-                } catch (IOException e) {
-                    e.printStackTrace();
+    public void startSogliaRequest() {
+        new Thread(sogliaThread).start();
+    }
+
+    public void richiestaEvento() {
+        String EVENTO = "evento";
+        writer.println(EVENTO);
+    }
+
+    public void startEventoRequest(Evento evento) {
+        Runnable eventoThread = () -> {
+            initSocket();
+            sendUsername();
+            if(checkResponseOK()) {
+                richiestaEvento();
+                if(checkResponseOK()) {
+                    writer.println(getUsernameFromPreferences() + ";" + evento.toString());
+                    try {
+                        String tipoEvento = reader.readLine();
+                        Log.d("tipo evento",tipoEvento);
+                        evento.setTipoEvento(tipoEvento);
+                        Evento.EventoListClass.getEventoList().add(evento);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    socket = null;
                 }
-                Log.d("fine thread","questa è la fine");
             }
-        }).start();
+        };
+        new Thread(eventoThread).start();
     }
 }

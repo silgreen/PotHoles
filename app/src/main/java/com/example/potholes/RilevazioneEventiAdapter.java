@@ -1,5 +1,6 @@
 package com.example.potholes;
 
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,21 +9,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.potholes.entity.Evento;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEventiAdapter.RilevazioneViewHolder> {
 
-    private String[] dataset;
+    private final List<Evento> eventoList;
 
-    public RilevazioneEventiAdapter(String[] localset) {
-        dataset = localset;
+    public RilevazioneEventiAdapter(List<Evento> eventoList) {
+        this.eventoList = eventoList;
     }
 
     public static class RilevazioneViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView item;
+        private final Geocoder geocoder;
 
         public RilevazioneViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            geocoder = new Geocoder(itemView.getContext(), Locale.getDefault());
             item = itemView.findViewById(R.id.itemText);
         }
 
@@ -40,11 +48,15 @@ public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEv
 
     @Override
     public void onBindViewHolder(@NonNull RilevazioneViewHolder holder, int position) {
-        holder.getItem().setText(dataset[position]);
+        try {
+            holder.getItem().setText(eventoList.get(position).eventoAddress(holder.geocoder));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return eventoList.size();
     }
 }

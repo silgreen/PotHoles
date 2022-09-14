@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
@@ -22,6 +23,12 @@ public class PosizioneService {
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest ;
     private LocationCallback locationCallback;
+    private Location posizione;
+
+
+    public Location getPosizione() {
+        return posizione;
+    }
 
     public PosizioneService(Context context){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
@@ -33,9 +40,7 @@ public class PosizioneService {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                Log.d("onlocationresult", "onLocationResult: "+ locationResult.getLocations().get(0));
-                //for (Location location : locationResult.getLocations())
-                stopLocation();
+                posizione = locationResult.getLastLocation();
             }
         };
     }
@@ -43,8 +48,8 @@ public class PosizioneService {
     public void instantiateLocationRequest(){
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setFastestInterval(10);
-        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setInterval(1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
     }

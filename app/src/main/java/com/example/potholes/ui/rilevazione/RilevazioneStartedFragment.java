@@ -36,7 +36,7 @@ public class RilevazioneStartedFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.rilevazione_started_fragment, container, false);
         SocketClient socketClient = new SocketClient(view.getContext());
-        socketClient.sogliaRequest();
+        socketClient.startSogliaRequest();
         PosizioneService posizioneService = new PosizioneService(view.getContext());
         RilevazioneService rilevazioneService = new RilevazioneService(view.getContext(),posizioneService);
         rilevazioneService.startRilevazione();
@@ -51,7 +51,6 @@ public class RilevazioneStartedFragment extends Fragment {
             rilevazioneService.stopRilevazione();
             fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneFragment.class,null).
                     setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
-
         });
 
         return view;
