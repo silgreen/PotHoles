@@ -2,7 +2,6 @@ package com.example.potholes.ui.rilevazione;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
@@ -19,9 +18,7 @@ import android.widget.Button;
 
 import com.example.potholes.R;
 import com.example.potholes.RilevazioneEventiAdapter;
-import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
-import com.example.potholes.ui.eventi.CustomAdapter;
 
 public class RilevazioneFragment extends Fragment {
 
@@ -41,7 +38,7 @@ public class RilevazioneFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRilevazione);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new RilevazioneEventiAdapter(Evento.EventoListClass.getEventoList()));
+        recyclerView.setAdapter(new RilevazioneEventiAdapter(Evento.EventoListClass.getEventoListRilevazione()));
 
         Button buttonRileva = view.findViewById(R.id.rilevaButtonFragment);
         buttonRileva.setOnClickListener(v -> {

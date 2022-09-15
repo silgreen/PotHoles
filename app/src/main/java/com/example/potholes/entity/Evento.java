@@ -18,6 +18,14 @@ public class Evento {
     private final double valore;
     private String tipoEvento;
 
+    public Evento(double lat,double lng, String tipoEvento) {
+        location = new Location("locationProvider");
+        location.setLatitude(lat);
+        location.setLongitude(lng);
+        this.tipoEvento = tipoEvento;
+        this.valore = 0;
+    }
+
     public Evento(Location location, double valore) {
         this.location = location;
         this.valore = valore;
@@ -47,19 +55,26 @@ public class Evento {
     }
 
     public static class EventoListClass {
-        private static List<Evento> eventoList;
+        private static List<Evento> eventoListRilevazione;
+        private static List<Evento> eventoListEventiVicini;
 
-        private static void initEventoList() {
-            eventoList = new ArrayList<>();
+        private static void initEventoListEventiVicini() {
+            eventoListEventiVicini = new ArrayList<>();
         }
 
-        public static List<Evento> getEventoList() {
-            if(eventoList == null) initEventoList();
-            return eventoList;
+        public static List<Evento> getEventoListEventiVicini() {
+            if(eventoListEventiVicini == null) initEventoListEventiVicini();
+            return eventoListEventiVicini;
         }
 
-        public Evento getEventoFromList(int index) {
-            return eventoList.get(index);
+        private static void initEventoListRilevazione() {
+            eventoListRilevazione = new ArrayList<>();
         }
+
+        public static List<Evento> getEventoListRilevazione() {
+            if(eventoListRilevazione == null) initEventoListRilevazione();
+            return eventoListRilevazione;
+        }
+
     }
 }

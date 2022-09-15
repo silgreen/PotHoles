@@ -13,18 +13,26 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class PosizioneService {
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest ;
     private LocationCallback locationCallback;
-    private Location posizione;
+    private volatile Location posizione;
+    private double latitudine;
+    private double longitudine;
 
+    public void setPosizione(Location posizione) {
+        this.posizione = posizione;
+    }
 
     public Location getPosizione() {
         return posizione;
@@ -34,6 +42,14 @@ public class PosizioneService {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         instantiateLocationRequest();
         instantiateLocationCallback();
+    }
+
+    public double getLatitudine() {
+        return latitudine;
+    }
+
+    public double getLongitudine() {
+        return longitudine;
     }
 
     public void instantiateLocationCallback(){
@@ -61,5 +77,24 @@ public class PosizioneService {
 
     public void stopLocation(){
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    @SuppressLint("MissingPermission")
+    public void retrieveLocation() {
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                synchronized (PosizioneService.this) {
+                    if(task.isSuccessful() && task.getResult() != null) {
+                        posizione = task.getResult();
+                        latitudine = posizione.getLatitude();
+                        longitudine = posizione.getLongitude();
+                        PosizioneService.this.notifyAll();
+                        Log.d("latitudine",latitudine + "");
+                        Log.d("longitudine",longitudine + "");
+                    }
+                }
+            }
+        });
     }
 }

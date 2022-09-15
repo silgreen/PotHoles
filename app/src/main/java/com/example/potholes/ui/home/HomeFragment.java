@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
         textHome.append(" " + username);
 
 
-
         Button rilevaButton = root.findViewById(R.id.rilevaButton);
         rilevaButton.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), RilevazioneActivity.class);

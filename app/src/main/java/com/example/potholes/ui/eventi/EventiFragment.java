@@ -15,13 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.potholes.R;
+import com.example.potholes.communication.SocketClient;
+import com.example.potholes.entity.Evento;
+import com.example.potholes.services.PosizioneService;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class EventiFragment extends Fragment {
-
-    private EventiViewModel mViewModel;
-    private RecyclerView recyclerView;
 
     public static EventiFragment newInstance() {
         return new EventiFragment();
@@ -31,23 +32,21 @@ public class EventiFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
-        ArrayList<String> s = new ArrayList<>();
-        s.add("mela");
-        s.add("ciccio");
-        s.add("banan");
+        PosizioneService posizioneService = new PosizioneService(getContext());
+        posizioneService.startLocation();
+        SocketClient socketClient = new SocketClient(getContext());
+        socketClient.startListaRequest(posizioneService);
         View view = inflater.inflate(R.layout.eventi_fragment, container, false);
-        recyclerView = view.findViewById(R.id.recyclerViewEventi);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventi);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new CustomAdapter(s));
-
+        recyclerView.setAdapter(new EventiAdapter(Evento.EventoListClass.getEventoListEventiVicini()));
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(EventiViewModel.class);
+        EventiViewModel mViewModel = new ViewModelProvider(this).get(EventiViewModel.class);
         // TODO: Use the ViewModel
     }
 
