@@ -22,18 +22,17 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import javax.xml.transform.Result;
+
 public class PosizioneService {
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest ;
     private LocationCallback locationCallback;
-    private volatile Location posizione;
+    private Location posizione;
     private double latitudine;
     private double longitudine;
 
-    public void setPosizione(Location posizione) {
-        this.posizione = posizione;
-    }
-
+    @SuppressLint("MissingPermission")
     public Location getPosizione() {
         return posizione;
     }
@@ -44,27 +43,22 @@ public class PosizioneService {
         instantiateLocationCallback();
     }
 
-    public double getLatitudine() {
-        return latitudine;
-    }
-
-    public double getLongitudine() {
-        return longitudine;
-    }
-
     public void instantiateLocationCallback(){
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                posizione = locationResult.getLastLocation();
-            }
+                synchronized (PosizioneService.this) {
+                    posizione = locationResult.getLastLocation();
+                    PosizioneService.this.notifyAll();
+                    }
+                }
         };
     }
 
     public void instantiateLocationRequest(){
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setFastestInterval(500);
+        locationRequest.setFastestInterval(50);
         locationRequest.setInterval(1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
@@ -79,22 +73,7 @@ public class PosizioneService {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    @SuppressLint("MissingPermission")
-    public void retrieveLocation() {
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                synchronized (PosizioneService.this) {
-                    if(task.isSuccessful() && task.getResult() != null) {
-                        posizione = task.getResult();
-                        latitudine = posizione.getLatitude();
-                        longitudine = posizione.getLongitude();
-                        PosizioneService.this.notifyAll();
-                        Log.d("latitudine",latitudine + "");
-                        Log.d("longitudine",longitudine + "");
-                    }
-                }
-            }
-        });
+    public void setPositionToNull() {
+        posizione = null;
     }
 }

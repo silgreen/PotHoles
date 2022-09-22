@@ -32,11 +32,7 @@ public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEv
 
     @Override
     public void onBindViewHolder(@NonNull RilevazioneViewHolder holder, int position) {
-        try {
-            holder.getItem().setText(eventoList.get(position).eventoAddress(holder.geocoder));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        holder.getItem().setText(eventoList.get(position).eventiViciniToString());
     }
 
     @Override

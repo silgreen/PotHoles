@@ -7,14 +7,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.potholes.R;
 import com.example.potholes.entity.Evento;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class EventiAdapter extends RecyclerView.Adapter<EventiAdapter.EventiViewHolder> {
     private final List<Evento> eventoList;
@@ -31,11 +41,7 @@ public class EventiAdapter extends RecyclerView.Adapter<EventiAdapter.EventiView
 
     @Override
     public void onBindViewHolder(@NonNull EventiViewHolder holder, int position) {
-        try {
-            holder.getItem().setText(this.eventoList.get(position).eventoAddress(holder.geocoder));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        holder.getItem().setText(eventoList.get(position).eventiViciniToString());
     }
 
     @Override
@@ -43,7 +49,7 @@ public class EventiAdapter extends RecyclerView.Adapter<EventiAdapter.EventiView
         return eventoList.size();
     }
 
-    public static class EventiViewHolder extends RecyclerView.ViewHolder{
+    public static class EventiViewHolder extends RecyclerView.ViewHolder {
         private final TextView item;
         private final Geocoder geocoder;
 

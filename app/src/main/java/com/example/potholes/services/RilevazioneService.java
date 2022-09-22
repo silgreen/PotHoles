@@ -13,8 +13,6 @@ import android.util.Log;
 import com.example.potholes.RilevazioneActivity;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -29,7 +27,7 @@ public class RilevazioneService{
     private final PosizioneService posizioneService;
     private final double soglia;
     private final SocketClient socketClient;
-    double last;
+    private double last;
 
     private final SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
@@ -75,6 +73,7 @@ public class RilevazioneService{
 
     public void stopRilevazione(){
         sensorManager.unregisterListener(sensorEventListener,sensor);
+        posizioneService.stopLocation();
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.potholes.communication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.telecom.Call;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,10 +40,6 @@ public class SocketClient {
         this.context = context;
     }
 
-    private final Runnable listaThread = () -> {
-
-    };
-
     private final Runnable sogliaThread = () -> {
         initSocket();
         sendUsername();
@@ -56,7 +53,7 @@ public class SocketClient {
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.26.155.19");
+                InetAddress serverAddress = InetAddress.getByName("172.18.62.207");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -116,49 +113,46 @@ public class SocketClient {
         String EVENTO = "evento";
         writer.println(EVENTO);
     }
-    public void startListaRequest(PosizioneService posizioneService) {
-        Runnable listaThread = () -> {
-            Location location;
+
+    public void richiestaLista() {
+        String LISTA = "lista";
+        writer.println(LISTA);
+    }
+
+    public List<Evento> deserializeEvento() {
+        String s = "";
+        List<Evento> eventiViciniList = new ArrayList<>();
+        while (s != null) {
+            try {
+                s = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(s!= null) {
+                String[] arr = s.split(";", 4);
+                Evento evento = new Evento(Double.parseDouble(arr[2]), Double.parseDouble(arr[3]), arr[1]);
+                eventiViciniList.add(evento);
+                Log.d("evento dopo lo split", evento.toString());
+            }
+        }
+        return eventiViciniList;
+    }
+
+    public void startEventiViciniRequest(Location location,List<Evento> eventoList) {
+        Runnable eventiViciniThread = () -> {
             initSocket();
             sendUsername();
             if(checkResponseOK()) {
                 richiestaLista();
                 if(checkResponseOK()) {
-                    synchronized (posizioneService) {
-                        posizioneService.retrieveLocation();
-                        while((posizioneService.getPosizione()) == null) try {
-                            posizioneService.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        location = posizioneService.getPosizione();
-                        Log.d("valore di location all'interno di syncro",location.toString());
-                        writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
-                    }
-                    String s = " ";
-                    while(s != null) {
-                        try {
-                            s = reader.readLine();
-                            if(s != null) {
-                                String[] arr = s.split(";", 4);
-                                Evento evento = new Evento(Double.valueOf(arr[2]),Double.valueOf(arr[3]),arr[1]);
-                                Evento.EventoListClass.getEventoListEventiVicini().add(evento);
-                                Log.d("evento dopo lo split",evento.toString());
-                            } else Log.d("risultato negativo","non ci sono eventi vicini");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Log.d("contenuto lista vicini",Evento.EventoListClass.getEventoListEventiVicini().toString());
+                    writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
+                    eventoList.addAll(deserializeEvento());
+                    Log.d("lista eventi vicini",eventoList.toString());
                 }
             }
+            socket = null;
         };
-        new Thread(listaThread).start();
-    }
-
-    public void richiestaLista() {
-        String LISTA = "lista";
-        writer.println(LISTA);
+        new Thread(eventiViciniThread).start();
     }
 
     public void startEventoRequest(Evento evento) {

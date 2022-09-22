@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 public class Evento {
     private final Location location;
@@ -38,6 +39,10 @@ public class Evento {
     @NonNull
     @Override
     public String toString() {
+        return location.getLatitude() + ";" + location.getLongitude() + ";" + valore;
+    }
+
+    public String eventiViciniToString() {
         return location.getLatitude() + ";" + location.getLongitude() + ";" + valore;
     }
 
@@ -75,6 +80,5 @@ public class Evento {
             if(eventoListRilevazione == null) initEventoListRilevazione();
             return eventoListRilevazione;
         }
-
     }
 }

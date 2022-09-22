@@ -15,4 +15,5 @@
     <string name="logout_text">Logout</string>
     <string name="eventi_rilevati_nell_ultima_sessione">Eventi rilevati nell\'ultima sessione</string>
     <string name="sample">sample</string>
+    <string name="cerca_eventi_vicini">Cerca eventi vicini</string>
 </resources>
