@@ -25,6 +25,7 @@ public class EventiViciniService {
             List<Evento> eventoList = new ArrayList<>();
             Log.d("TAG", "sono nel callable");
             eventiViciniRequest(eventoList);
+
             return eventoList;
         }
     };

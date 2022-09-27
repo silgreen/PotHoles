@@ -16,4 +16,6 @@
     <string name="eventi_rilevati_nell_ultima_sessione">Eventi rilevati nell\'ultima sessione</string>
     <string name="sample">sample</string>
     <string name="cerca_eventi_vicini">Cerca eventi vicini</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

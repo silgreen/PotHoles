@@ -1,15 +1,27 @@
 package com.example.potholes.ui.eventi;
 
+import android.content.Intent;
 import android.location.Location;
+import android.media.metrics.Event;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +32,9 @@ import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
 import com.example.potholes.services.EventiViciniService;
 import com.example.potholes.services.PosizioneService;
+import com.example.potholes.ui.loading.Container;
+import com.example.potholes.ui.loading.LoadingDialogScreen;
+import com.example.potholes.ui.loading.LoadingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +44,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class EventiFragment extends Fragment {
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -48,6 +65,10 @@ public class EventiFragment extends Fragment {
         eventiViewModel.setEventoListVicini(eventiViciniList[0]);
         EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniList[0]);
         recyclerView.setAdapter(eventiAdapter);
+        if(eventiViciniList[0].isEmpty()) {
+            Intent intent = new Intent(getActivity(),Container.class);
+            startActivity(intent);
+        }
         view.findViewById(R.id.cercaEventiViciniButton).setOnClickListener(view1 -> {
             try {
                 eventiViciniList[0] = futureList.get();
@@ -68,5 +89,6 @@ public class EventiFragment extends Fragment {
             });
         });
         return view;
-    }
+        }
+
 }

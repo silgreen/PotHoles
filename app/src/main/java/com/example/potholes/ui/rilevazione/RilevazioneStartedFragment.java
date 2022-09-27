@@ -49,8 +49,10 @@ public class RilevazioneStartedFragment extends Fragment {
         Button interrompiButton= view.findViewById(R.id.rilevaButtonFragment);
         interrompiButton.setOnClickListener(v-> {
             rilevazioneService.stopRilevazione();
-            fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneFragment.class,null).
-                    setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+            fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneFragment.class,null)
+                    .setReorderingAllowed(true)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
         });
 
         return view;

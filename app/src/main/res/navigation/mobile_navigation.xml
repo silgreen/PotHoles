@@ -15,8 +15,7 @@
         android:id="@+id/navigation_eventi"
         android:name="com.example.potholes.ui.eventi.EventiFragment"
         android:label="@string/TextEventi"
-        tools:layout="@layout/eventi_fragment"
 
-        />
+        tools:layout="@layout/eventi_fragment" />
 
 </navigation>

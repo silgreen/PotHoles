@@ -19,6 +19,7 @@ import android.widget.Button;
 import com.example.potholes.R;
 import com.example.potholes.RilevazioneEventiAdapter;
 import com.example.potholes.entity.Evento;
+import com.example.potholes.ui.loading.LoadingFragment;
 
 public class RilevazioneFragment extends Fragment {
 
@@ -42,7 +43,7 @@ public class RilevazioneFragment extends Fragment {
 
         Button buttonRileva = view.findViewById(R.id.rilevaButtonFragment);
         buttonRileva.setOnClickListener(v -> {
-            fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneStartedFragment.class,null).
+            fragmentTransaction.replace(R.id.fragmentContainerView2, LoadingFragment.class,null).
                     setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         });
 
