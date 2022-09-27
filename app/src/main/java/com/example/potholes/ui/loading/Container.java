@@ -14,6 +14,8 @@ import com.example.potholes.ui.eventi.EventiFragment;
 
 public class Container extends AppCompatActivity {
 
+    // TODO: 27/09/2022 spostare operazioni di riempimento della lista nel thread sottostante
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
