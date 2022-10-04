@@ -27,6 +27,7 @@ public class LoadingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loading, container, false);
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -38,6 +39,7 @@ public class LoadingFragment extends Fragment {
                         .commit();
             }
         },3000);
+         */
         return view;
     }
 }

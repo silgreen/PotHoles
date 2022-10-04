@@ -6,6 +6,7 @@ import android.media.metrics.Event;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,14 +45,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class EventiFragment extends Fragment {
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
+    private final List<Evento> [] eventiViciniList = new List[1];
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        List<Evento> [] eventiViciniList = new List[1];
-        eventiViciniList[0] = new ArrayList<>();
         PosizioneService posizioneService = new PosizioneService(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
@@ -59,23 +57,24 @@ public class EventiFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventi);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         EventiViciniService eventiViciniService = new EventiViciniService(posizioneService,socketClient);
+
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<List<Evento>> futureList = executorService.submit(eventiViciniService.getCallable());
+
         EventiViewModel eventiViewModel = new ViewModelProvider(this).get(EventiViewModel.class);
-        eventiViewModel.setEventoListVicini(eventiViciniList[0]);
-        EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniList[0]);
+        initList();
+        eventiViewModel.setEventoListVicini(eventiViciniService.getEventoList());
+        EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniService.getEventoList());
+
         recyclerView.setAdapter(eventiAdapter);
-        if(eventiViciniList[0].isEmpty()) {
+        if(eventiViciniService.getEventoList().isEmpty()) {
             Intent intent = new Intent(getActivity(),Container.class);
             startActivity(intent);
         }
+        Log.d("content lista",eventiViciniService.getEventoList().toString());
+        /*
         view.findViewById(R.id.cercaEventiViciniButton).setOnClickListener(view1 -> {
-            try {
-                eventiViciniList[0] = futureList.get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            eventiViewModel.fillEventoList(eventiViciniList[0]);
+            eventiViewModel.fillEventoList(eventiViciniService.getEventoList());
             recyclerView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -88,7 +87,12 @@ public class EventiFragment extends Fragment {
                 }
             });
         });
+        */
         return view;
         }
 
+    private void initList() {
+        if(eventiViciniList[0] == null)
+            eventiViciniList[0] = new ArrayList<>();
+    }
 }

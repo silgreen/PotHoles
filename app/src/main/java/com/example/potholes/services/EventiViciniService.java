@@ -1,6 +1,7 @@
 package com.example.potholes.services;
 
 import android.content.Context;
+import android.media.metrics.Event;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -19,13 +20,12 @@ import java.util.concurrent.Callable;
 public class EventiViciniService {
     private final PosizioneService posizioneService;
     private final SocketClient socketClient;
+    private static List<Evento> eventoList;
     private final Callable<List<Evento>> callable = new Callable<List<Evento>>() {
         @Override
         public List<Evento> call() throws Exception {
-            List<Evento> eventoList = new ArrayList<>();
             Log.d("TAG", "sono nel callable");
-            eventiViciniRequest(eventoList);
-
+            eventiViciniRequest();
             return eventoList;
         }
     };
@@ -34,12 +34,17 @@ public class EventiViciniService {
         return callable;
     }
 
+    public List<Evento> getEventoList() {
+        return eventoList;
+    }
+
     public EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
+        if(eventoList == null) eventoList = new ArrayList<>();
         this.posizioneService = posizioneService;
         this.socketClient = socketClient;
     }
 
-    public void eventiViciniRequest(List<Evento> eventoList) {
+    public void eventiViciniRequest() {
         synchronized (posizioneService) {
             while (posizioneService.getPosizione() == null) {
                 try {

@@ -20,27 +20,25 @@ public class Container extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainerView, EventiFragment.class,null)
-                        .setReorderingAllowed(true)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
-            }
-        },3000);
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
+        handleLoading();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void handleLoading() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragmentContainerView, EventiFragment.class, null)
+                            .setReorderingAllowed(true)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commitAllowingStateLoss();
+            }
+        }, 5000);
     }
 }
