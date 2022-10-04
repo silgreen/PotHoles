@@ -20,26 +20,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.example.potholes.R;
+import com.example.potholes.communication.SocketClient;
+import com.example.potholes.services.EventiViciniService;
+import com.example.potholes.services.PosizioneService;
 import com.example.potholes.ui.eventi.EventiFragment;
 
 public class LoadingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_loading, container, false);
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainerView,EventiFragment.class,null)
-                        .setReorderingAllowed(true)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
-            }
-        },3000);
-         */
+        View view = inflater.inflate(R.layout.fragment_loading,container,false);
+        PosizioneService posizioneService = new PosizioneService(getContext());
+        posizioneService.startLocation();
+        SocketClient socketClient = new SocketClient(getContext());
+        EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);
+        eventiViciniService.startRequestEventiVicini();
         return view;
     }
 }

@@ -22,6 +22,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.Serializable;
+
 import javax.xml.transform.Result;
 
 public class PosizioneService {

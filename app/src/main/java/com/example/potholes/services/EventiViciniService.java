@@ -13,38 +13,35 @@ import com.example.potholes.entity.Evento;
 import com.example.potholes.ui.eventi.EventiFragment;
 import com.example.potholes.ui.eventi.EventiViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public class EventiViciniService {
+    private static EventiViciniService entity = null;
     private final PosizioneService posizioneService;
     private final SocketClient socketClient;
     private static List<Evento> eventoList;
-    private final Callable<List<Evento>> callable = new Callable<List<Evento>>() {
-        @Override
-        public List<Evento> call() throws Exception {
-            Log.d("TAG", "sono nel callable");
-            eventiViciniRequest();
-            return eventoList;
-        }
-    };
-
-    public Callable<List<Evento>> getCallable() {
-        return callable;
-    }
 
     public List<Evento> getEventoList() {
         return eventoList;
     }
 
-    public EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
+    public static EventiViciniService getInstance(PosizioneService posizioneService, SocketClient socketClient) {
+        if(entity == null) {
+            entity = new EventiViciniService(posizioneService,socketClient);
+        }
+        return entity;
+    }
+
+    private EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
         if(eventoList == null) eventoList = new ArrayList<>();
         this.posizioneService = posizioneService;
         this.socketClient = socketClient;
     }
 
-    public void eventiViciniRequest() {
+    private void eventiViciniRequest() {
         synchronized (posizioneService) {
             while (posizioneService.getPosizione() == null) {
                 try {
@@ -55,5 +52,9 @@ public class EventiViciniService {
             }
             socketClient.startEventiViciniRequest(posizioneService.getPosizione(),eventoList);
         }
+    }
+
+    public void startRequestEventiVicini() {
+        new Thread(this::eventiViciniRequest).start();
     }
 }
