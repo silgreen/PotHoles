@@ -37,7 +37,7 @@ public class RilevazioneStartedFragment extends Fragment {
         View view = inflater.inflate(R.layout.rilevazione_started_fragment, container, false);
         SocketClient socketClient = new SocketClient(view.getContext());
         socketClient.startSogliaRequest();
-        PosizioneService posizioneService = PosizioneService.getInstance(getContext());
+        PosizioneService posizioneService = new PosizioneService(getContext());
         RilevazioneService rilevazioneService = new RilevazioneService(view.getContext(),posizioneService);
         rilevazioneService.startRilevazione();
 

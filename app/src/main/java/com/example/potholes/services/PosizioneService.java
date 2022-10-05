@@ -27,7 +27,6 @@ import java.io.Serializable;
 import javax.xml.transform.Result;
 
 public class PosizioneService {
-    private static PosizioneService entity = null;
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest ;
     private LocationCallback locationCallback;
@@ -38,12 +37,7 @@ public class PosizioneService {
         return posizione;
     }
 
-    public static PosizioneService getInstance(Context context) {
-        if(entity == null) entity = new PosizioneService(context);
-        return entity;
-    }
-
-    private PosizioneService(Context context){
+    public PosizioneService(Context context){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         instantiateLocationRequest();
         instantiateLocationCallback();

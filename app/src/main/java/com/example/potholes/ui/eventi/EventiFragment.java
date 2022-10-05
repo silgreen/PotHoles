@@ -27,6 +27,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +40,7 @@ import com.example.potholes.services.PosizioneService;
 import com.example.potholes.ui.loading.Container;
 import com.example.potholes.ui.loading.LoadingDialogScreen;
 import com.example.potholes.ui.loading.LoadingFragment;
+import com.example.potholes.ui.loading.LoadingFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,7 @@ public class EventiFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        PosizioneService posizioneService = PosizioneService.getInstance(getContext());
+        PosizioneService posizioneService = new PosizioneService(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
         View view = inflater.inflate(R.layout.eventi_fragment, container, false);
@@ -63,8 +66,8 @@ public class EventiFragment extends Fragment {
         EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniService.getEventoList());
         recyclerView.setAdapter(eventiAdapter);
         if(eventiViciniService.getEventoList().isEmpty()) {
-            Intent intent = new Intent(getActivity(),Container.class);
-            startActivity(intent);
+            NavDirections navDirections = EventiFragmentDirections.actionNavigationEventiToLoadingFragment();
+            Navigation.findNavController(container).navigate(navDirections);
         }
         return view;
     }

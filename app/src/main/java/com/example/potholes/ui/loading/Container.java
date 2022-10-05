@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +17,6 @@ import com.example.potholes.services.EventiViciniService;
 import com.example.potholes.ui.eventi.EventiFragment;
 
 public class Container extends AppCompatActivity {
-
-    // TODO: 27/09/2022 spostare operazioni di riempimento della lista nel thread sottostante
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +33,8 @@ public class Container extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainerView, EventiFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
+                NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
+                Navigation.findNavController(Container.this,R.id.fragmentContainerView).navigate(navDirections);
             }
         }, 5000);
     }
