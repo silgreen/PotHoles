@@ -30,7 +30,7 @@ public class LoadingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loading,container,false);
-        PosizioneService posizioneService = new PosizioneService(getContext());
+        PosizioneService posizioneService = PosizioneService.getInstance(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
         EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);

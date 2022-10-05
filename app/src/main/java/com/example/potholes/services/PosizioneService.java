@@ -27,19 +27,23 @@ import java.io.Serializable;
 import javax.xml.transform.Result;
 
 public class PosizioneService {
+    private static PosizioneService entity = null;
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest ;
     private LocationCallback locationCallback;
     private Location posizione;
-    private double latitudine;
-    private double longitudine;
 
     @SuppressLint("MissingPermission")
     public Location getPosizione() {
         return posizione;
     }
 
-    public PosizioneService(Context context){
+    public static PosizioneService getInstance(Context context) {
+        if(entity == null) entity = new PosizioneService(context);
+        return entity;
+    }
+
+    private PosizioneService(Context context){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         instantiateLocationRequest();
         instantiateLocationCallback();
@@ -73,9 +77,5 @@ public class PosizioneService {
 
     public void stopLocation(){
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
-    public void setPositionToNull() {
-        posizione = null;
     }
 }

@@ -51,7 +51,7 @@ public class EventiFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        PosizioneService posizioneService = new PosizioneService(getContext());
+        PosizioneService posizioneService = PosizioneService.getInstance(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
         View view = inflater.inflate(R.layout.eventi_fragment, container, false);
