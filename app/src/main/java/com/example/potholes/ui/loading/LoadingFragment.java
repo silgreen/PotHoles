@@ -38,14 +38,25 @@ public class LoadingFragment extends Fragment {
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
         EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);
-        eventiViciniService.startRequestEventiVicini();
-        new Handler().postDelayed(new Runnable() {
+        Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
-                Navigation.findNavController(view).navigate(navDirections);
+                eventiViciniService.startRequestEventiVicini();
             }
-        },4000);
+        });
+        t1.start();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    t1.join();
+                    NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
+                    Navigation.findNavController(container).navigate(navDirections);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return view;
     }
 }

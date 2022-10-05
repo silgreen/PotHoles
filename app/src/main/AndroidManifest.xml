@@ -20,9 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PotHoles">
-        <activity
-            android:name=".ui.loading.Container"
-            android:exported="true" />
 
         <activity
             android:name=".RilevazioneActivity"
