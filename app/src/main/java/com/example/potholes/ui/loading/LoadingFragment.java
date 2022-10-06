@@ -16,6 +16,9 @@ import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,29 +37,23 @@ public class LoadingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loading,container,false);
+        startRequestEventiViciniOperations();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
+                Navigation.findNavController(container).navigate(navDirections);
+            }
+        },5000);
+        return view;
+    }
+
+    public void startRequestEventiViciniOperations() {
         PosizioneService posizioneService = new PosizioneService(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
         EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                eventiViciniService.startRequestEventiVicini();
-            }
-        });
-        t1.start();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    t1.join();
-                    NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
-                    Navigation.findNavController(container).navigate(navDirections);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        return view;
+        eventiViciniService.startRequestEventiVicini();
     }
 }
