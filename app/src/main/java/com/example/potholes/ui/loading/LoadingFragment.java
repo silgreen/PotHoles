@@ -1,13 +1,16 @@
 package com.example.potholes.ui.loading;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import com.example.potholes.HomePage;
 import com.example.potholes.R;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.services.EventiViciniService;
@@ -16,11 +19,18 @@ import com.example.potholes.services.PosizioneService;
 public class LoadingFragment extends Fragment {
     private Handler handler;
     private View container;
+    private EventiViciniService eventiViciniService;
     private final Runnable changeFragment = new Runnable() {
         @Override
         public void run() {
-            NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
-            Navigation.findNavController(container).navigate(navDirections);
+            if(eventiViciniService.getEventoList().isEmpty()) {
+                Toast.makeText(getContext(), "Nessun evento Vicino trovato", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), HomePage.class);
+                startActivity(intent);
+            } else {
+                NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
+                Navigation.findNavController(container).navigate(navDirections);
+            }
         }
     };
     @Override
@@ -43,7 +53,7 @@ public class LoadingFragment extends Fragment {
         PosizioneService posizioneService = new PosizioneService(getContext());
         posizioneService.startLocation();
         SocketClient socketClient = new SocketClient(getContext());
-        EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);
+        eventiViciniService = EventiViciniService.getInstance(posizioneService,socketClient);
         eventiViciniService.startRequestEventiVicini();
     }
 

@@ -39,7 +39,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.18.207.179");
+                InetAddress serverAddress = InetAddress.getByName("172.18.207.224");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

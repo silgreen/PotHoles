@@ -1,17 +1,11 @@
 package com.example.potholes;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.potholes.databinding.TextRowItemBinding;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterUsernameActivity extends AppCompatActivity {
 
