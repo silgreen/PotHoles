@@ -1,6 +1,5 @@
-package com.example.potholes;
+package com.example.potholes.ui.rilevazione;
 
-import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.potholes.R;
 import com.example.potholes.entity.Evento;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEventiAdapter.RilevazioneViewHolder> {
 
@@ -32,7 +30,7 @@ public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEv
 
     @Override
     public void onBindViewHolder(@NonNull RilevazioneViewHolder holder, int position) {
-        holder.getItem().setText(eventoList.get(position).eventiViciniToString());
+        holder.getItem().setText(eventoList.get(position).toString());
     }
 
     @Override
@@ -43,11 +41,9 @@ public class RilevazioneEventiAdapter extends RecyclerView.Adapter<RilevazioneEv
     public static class RilevazioneViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView item;
-        private final Geocoder geocoder;
 
         public RilevazioneViewHolder(@NonNull View itemView) {
             super(itemView);
-            geocoder = new Geocoder(itemView.getContext(), Locale.getDefault());
             item = itemView.findViewById(R.id.itemText);
         }
 

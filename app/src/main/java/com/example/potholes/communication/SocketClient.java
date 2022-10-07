@@ -3,36 +3,21 @@ package com.example.potholes.communication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.telecom.Call;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.potholes.RilevazioneEventiAdapter;
 import com.example.potholes.entity.Evento;
-import com.example.potholes.services.PosizioneService;
-import com.example.potholes.ui.eventi.EventiAdapter;
-import com.example.potholes.ui.rilevazione.RilevazioneViewModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class SocketClient{
     private final Context context;
-    private final String LISTA = "lista";
     private BufferedReader reader;
     private PrintWriter writer;
     private Socket socket;
@@ -54,7 +39,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.18.206.105");
+                InetAddress serverAddress = InetAddress.getByName("172.18.207.179");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -163,7 +148,7 @@ public class SocketClient{
             if(checkResponseOK()) {
                 richiestaEvento();
                 if(checkResponseOK()) {
-                    writer.println(getUsernameFromPreferences() + ";" + evento.toString());
+                    writer.println(getUsernameFromPreferences() + ";" + evento.toStringForSocket());
                     try {
                         String tipoEvento = reader.readLine();
                         Log.d("tipo evento",tipoEvento);

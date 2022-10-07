@@ -6,20 +6,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.media.metrics.Event;
-import android.util.Log;
-
-import com.example.potholes.RilevazioneActivity;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RilevazioneService{
     private final SensorManager sensorManager;
@@ -52,7 +42,6 @@ public class RilevazioneService{
                 last = 0;
             }
         }
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
