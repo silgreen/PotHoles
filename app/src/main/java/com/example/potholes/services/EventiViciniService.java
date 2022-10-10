@@ -3,16 +3,16 @@ package com.example.potholes.services;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EventiViciniService {
     private static EventiViciniService entity = null;
     private final PosizioneService posizioneService;
     private final SocketClient socketClient;
-    private static List<Evento> eventoList;
+    private static Set<Evento> eventoList;
 
-    public List<Evento> getEventoList() {
+    public Set<Evento> getEventoList() {
         return eventoList;
     }
 
@@ -24,7 +24,7 @@ public class EventiViciniService {
     }
 
     private EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
-        if(eventoList == null) eventoList = new ArrayList<>();
+        if(eventoList == null) eventoList = new HashSet<>();
         this.posizioneService = posizioneService;
         this.socketClient = socketClient;
     }

@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SocketClient{
     private final Context context;
@@ -39,7 +39,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.18.207.224");
+                InetAddress serverAddress = InetAddress.getByName("ec2-3-122-107-154.eu-central-1.compute.amazonaws.com");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -105,9 +105,9 @@ public class SocketClient{
         writer.println(LISTA);
     }
 
-    public List<Evento> deserializeEvento() {
+    public Set<Evento> deserializeEvento() {
         String s = "";
-        List<Evento> eventiViciniList = new ArrayList<>();
+        Set<Evento> eventiViciniList = new HashSet<>();
         while (s != null) {
             try {
                 s = reader.readLine();
@@ -118,13 +118,12 @@ public class SocketClient{
                 String[] arr = s.split(";", 4);
                 Evento evento = new Evento(Double.parseDouble(arr[2]), Double.parseDouble(arr[3]), arr[1]);
                 eventiViciniList.add(evento);
-                Log.d("evento dopo lo split", evento.toString());
             }
         }
         return eventiViciniList;
     }
 
-    public void startEventiViciniRequest(Location location,List<Evento> eventoList) {
+    public void startEventiViciniRequest(Location location, Set<Evento> eventoList) {
         Runnable eventiViciniThread = () -> {
             initSocket();
             sendUsername();
@@ -133,7 +132,7 @@ public class SocketClient{
                 if(checkResponseOK()) {
                     writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
                     eventoList.addAll(deserializeEvento());
-                    Log.d("lista eventi vicini",eventoList.toString());
+
                 }
             }
             socket = null;

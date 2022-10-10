@@ -8,14 +8,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.potholes.R;
 import com.example.potholes.entity.Evento;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class EventiAdapter extends RecyclerView.Adapter<EventiAdapter.EventiViewHolder> {
     private final List<Evento> eventoList;
 
-    public EventiAdapter(List<Evento> eventoList) {
-        this.eventoList = eventoList;
+    public EventiAdapter(Set<Evento> eventoList) {
+        this.eventoList = new ArrayList<>();
+        this.eventoList.addAll(eventoList);
     }
+
     @NonNull
     @Override
     public EventiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -50,4 +50,20 @@ public class Evento {
             return eventoListRilevazione;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Evento evento = (Evento) o;
+        return location.getLatitude() == evento.location.getLatitude()
+                && location.getLongitude() == evento.location.getLongitude()
+                && tipoEvento.equals(evento.tipoEvento);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(location.getLatitude()) ^ Double.hashCode(location.getLongitude()) ^ tipoEvento.hashCode();
+    }
 }

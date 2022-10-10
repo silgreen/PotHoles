@@ -1,8 +1,10 @@
 package com.example.potholes.ui.eventi;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -10,13 +12,14 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.potholes.R;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
 import com.example.potholes.services.EventiViciniService;
 import com.example.potholes.services.PosizioneService;
 
-import java.util.List;
+import java.util.Set;
 
 public class EventiFragment extends Fragment {
     private PosizioneService posizioneService;
@@ -44,7 +47,7 @@ public class EventiFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        List<Evento> eventoList = EventiViciniService.getInstance(posizioneService,socketClient).getEventoList();
+        Set<Evento> eventoList = EventiViciniService.getInstance(posizioneService,socketClient).getEventoList();
         if(!eventoList.isEmpty()) eventoList.clear();
     }
 }
