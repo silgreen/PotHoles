@@ -1,5 +1,5 @@
 package com.example.potholes.ui.loading;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import com.example.potholes.HomePage;
 import com.example.potholes.R;
 import com.example.potholes.communication.SocketClient;
 import com.example.potholes.services.EventiViciniService;
@@ -20,13 +20,20 @@ public class LoadingFragment extends Fragment {
     private Handler handler;
     private View container;
     private EventiViciniService eventiViciniService;
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationHome();
+            Navigation.findNavController(container).navigate(navDirections);
+        }
+    };
     private final Runnable changeFragment = new Runnable() {
         @Override
         public void run() {
             if(eventiViciniService.getEventoList().isEmpty()) {
                 Toast.makeText(getContext(), "Nessun evento Vicino trovato", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), HomePage.class);
-                startActivity(intent);
+                NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationHome();
+                Navigation.findNavController(container).navigate(navDirections);
             } else {
                 NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationEventi();
                 Navigation.findNavController(container).navigate(navDirections);
@@ -40,6 +47,9 @@ public class LoadingFragment extends Fragment {
         this.container = container;
         startRequestEventiViciniOperations();
         createHandler();
+        onBackPressedCallback.setEnabled(true);
+        if(getActivity() != null)
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(),onBackPressedCallback);
         return view;
     }
 
@@ -47,6 +57,7 @@ public class LoadingFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(changeFragment);
+        onBackPressedCallback.setEnabled(false);
     }
 
     public void startRequestEventiViciniOperations() {

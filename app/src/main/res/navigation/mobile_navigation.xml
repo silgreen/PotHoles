@@ -33,6 +33,12 @@
             app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="true"
             app:popUpTo="@id/loadingFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
     </fragment>
 
 </navigation>
