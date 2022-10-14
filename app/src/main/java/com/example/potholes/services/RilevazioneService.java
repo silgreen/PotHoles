@@ -52,7 +52,7 @@ public class RilevazioneService{
         sensorManager=(SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         SharedPreferences sharedPreferences = context.getSharedPreferences("info",Context.MODE_PRIVATE);
-        this.soglia = Double.parseDouble(sharedPreferences.getString("soglia","NULL"));
+        this.soglia = Double.parseDouble(sharedPreferences.getString("soglia","1.0"));
     }
 
     public void startRilevazione(){
