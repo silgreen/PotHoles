@@ -39,7 +39,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("ec2-3-122-107-154.eu-central-1.compute.amazonaws.com");
+                InetAddress serverAddress = InetAddress.getByName("3.67.220.240");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

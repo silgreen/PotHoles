@@ -22,6 +22,12 @@
             app:enterAnim="@android:anim/fade_in"
             app:launchSingleTop="true"
             app:popUpTo="@id/navigation_eventi" />
+        <action
+            android:id="@+id/action_navigation_eventi_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/loadingFragment"

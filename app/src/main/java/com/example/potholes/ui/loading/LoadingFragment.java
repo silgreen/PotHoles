@@ -49,7 +49,7 @@ public class LoadingFragment extends Fragment {
         createHandler();
         onBackPressedCallback.setEnabled(true);
         if(getActivity() != null)
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(),onBackPressedCallback);
+            requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(),onBackPressedCallback);
         return view;
     }
 
