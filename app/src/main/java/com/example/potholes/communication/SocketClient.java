@@ -107,7 +107,7 @@ public class SocketClient{
 
     public Set<Evento> deserializeEvento() {
         String s = "";
-        Set<Evento> eventiViciniList = new HashSet<>();
+        Set<Evento> eventoSet = new HashSet<>();
         while (s != null) {
             try {
                 s = reader.readLine();
@@ -117,13 +117,13 @@ public class SocketClient{
             if(s!= null) {
                 String[] arr = s.split(";", 4);
                 Evento evento = new Evento(Double.parseDouble(arr[2]), Double.parseDouble(arr[3]), arr[1]);
-                eventiViciniList.add(evento);
+                eventoSet.add(evento);
             }
         }
-        return eventiViciniList;
+        return eventoSet;
     }
 
-    public void startEventiViciniRequest(Location location, Set<Evento> eventoList) {
+    public void startEventiViciniRequest(Location location, Set<Evento> eventoSet) {
         Runnable eventiViciniThread = () -> {
             initSocket();
             sendUsername();
@@ -131,7 +131,7 @@ public class SocketClient{
                 richiestaLista();
                 if(checkResponseOK()) {
                     writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
-                    eventoList.addAll(deserializeEvento());
+                    eventoSet.addAll(deserializeEvento());
 
                 }
             }
