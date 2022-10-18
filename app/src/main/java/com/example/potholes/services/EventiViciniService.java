@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class EventiViciniService {
-    private static EventiViciniService entity = null;
+    private static EventiViciniService instance = null;
     private final PosizioneService posizioneService;
     private final SocketClient socketClient;
     private static Set<Evento> eventoList;
@@ -17,10 +17,10 @@ public class EventiViciniService {
     }
 
     public static EventiViciniService getInstance(PosizioneService posizioneService, SocketClient socketClient) {
-        if(entity == null) {
-            entity = new EventiViciniService(posizioneService,socketClient);
+        if(instance == null) {
+            instance = new EventiViciniService(posizioneService,socketClient);
         }
-        return entity;
+        return instance;
     }
 
     private EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
