@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.potholes.HomePage;
 import com.example.potholes.R;
+import com.example.potholes.communication.SocketClient;
 import com.example.potholes.entity.Evento;
 
 public class RilevazioneFragment extends Fragment {
@@ -40,8 +43,18 @@ public class RilevazioneFragment extends Fragment {
         recyclerView.setAdapter(new RilevazioneEventiAdapter(Evento.EventoListClass.getEventoListRilevazione()));
 
         Button buttonRileva = view.findViewById(R.id.rilevaButtonFragment);
+
+        SocketClient socketClient = new SocketClient(getContext());
+        if(!socketClient.checkConnection()) {
+            buttonRileva.setEnabled(false);
+            Toast.makeText(getContext(), "Nessuna connessione ad internet", Toast.LENGTH_SHORT).show();
+        }else {
+            buttonRileva.setEnabled(true);
+        }
+
         buttonRileva.setOnClickListener(v -> fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneStartedFragment.class,null).
                 setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit());
+
 
         return view;
     }

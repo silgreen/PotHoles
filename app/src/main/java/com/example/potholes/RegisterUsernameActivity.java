@@ -16,7 +16,11 @@ public class RegisterUsernameActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("info",MODE_PRIVATE);
 
         EditText editText = findViewById(R.id.editTextUsername);
-
+        if(!sharedPreferences.getString("username","utente").equals("utente")){
+            Intent intent = new Intent(this,HomePage.class);
+            startActivity(intent);
+            finish();
+        }
         findViewById(R.id.button).setOnClickListener((v) -> {
             if(editText.getText().toString().equals("")) {
                 Toast.makeText(this, "Inserisci un username valido", Toast.LENGTH_SHORT).show();

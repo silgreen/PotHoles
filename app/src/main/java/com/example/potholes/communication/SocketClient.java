@@ -3,7 +3,10 @@ package com.example.potholes.communication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.potholes.entity.Evento;
 
@@ -39,7 +42,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("3.67.220.240");
+                InetAddress serverAddress = InetAddress.getByName("172.17.148.253");
                 socket = new Socket(serverAddress,8080);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -161,5 +164,11 @@ public class SocketClient{
             }
         };
         new Thread(eventoThread).start();
+    }
+
+    public boolean checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null;
     }
 }

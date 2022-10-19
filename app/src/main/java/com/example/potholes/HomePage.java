@@ -2,8 +2,11 @@ package com.example.potholes;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,13 +31,16 @@ public class HomePage extends AppCompatActivity {
         ActivityHomePageBinding binding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setNavigationUi(binding);
-        checkConnection();
         checkCoarsePermission();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.logoutMenuItem) {
+            SharedPreferences sharedPreferences = getSharedPreferences("info",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("username","utente");
+            editor.apply();
             Intent intent = new Intent(HomePage.this,RegisterUsernameActivity.class);
             startActivity(intent);
             return true;
@@ -56,12 +62,6 @@ public class HomePage extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home_page);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-    }
-
-    private void checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(!connectivityManager.getActiveNetworkInfo().isAvailable())
-            Toast.makeText(this, "Nessuna connessione ad internet", Toast.LENGTH_SHORT).show();
     }
 
     private void checkCoarsePermission(){
