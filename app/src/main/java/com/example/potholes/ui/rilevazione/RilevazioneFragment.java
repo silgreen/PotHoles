@@ -41,11 +41,10 @@ public class RilevazioneFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRilevazione);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(new RilevazioneEventiAdapter(Evento.EventoListClass.getEventoListRilevazione()));
-
         Button buttonRileva = view.findViewById(R.id.rilevaButtonFragment);
 
         SocketClient socketClient = new SocketClient(getContext());
-        if(!socketClient.checkConnection()) {
+        if(socketClient.checkConnectivityService()) {
             buttonRileva.setEnabled(false);
             Toast.makeText(getContext(), "Nessuna connessione ad internet", Toast.LENGTH_SHORT).show();
         }else {
@@ -54,8 +53,6 @@ public class RilevazioneFragment extends Fragment {
 
         buttonRileva.setOnClickListener(v -> fragmentTransaction.replace(R.id.fragmentContainerView2, RilevazioneStartedFragment.class,null).
                 setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit());
-
-
         return view;
     }
 }

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.potholes.HomePage;
-import com.example.potholes.RilevazioneActivity;
 import com.example.potholes.entity.Evento;
 
 import java.io.BufferedReader;
@@ -54,21 +53,22 @@ public class SocketClient{
                 InetAddress serverAddress = InetAddress.getByName("172.17.159.77");
                 socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress(serverAddress,8080);
-                socket.connect(socketAddress,2000);
+                socket.connect(socketAddress,8000);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             } catch (IOException e) {
                 e.printStackTrace();
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "connessione al server fallita", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context,HomePage.class);
-                        context.startActivity(intent);
-                    }
-                });
+                handleConnectionError();
             }
         }
+    }
+
+    private void handleConnectionError() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Toast.makeText(context, "connessione al server fallita", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context,HomePage.class);
+            context.startActivity(intent);
+        });
     }
 
     public String getUsernameFromPreferences() {
@@ -155,7 +155,6 @@ public class SocketClient{
                     if (checkResponseOK()) {
                         writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
                         eventoSet.addAll(deserializeEvento());
-
                     }
                 }
             }
@@ -189,9 +188,9 @@ public class SocketClient{
         new Thread(eventoThread).start();
     }
 
-    public boolean checkConnection() {
+    public boolean checkConnectivityService() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null;
+        return networkInfo == null;
     }
 }
