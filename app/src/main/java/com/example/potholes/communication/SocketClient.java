@@ -1,13 +1,18 @@
 package com.example.potholes.communication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.potholes.HomePage;
+import com.example.potholes.RilevazioneActivity;
 import com.example.potholes.entity.Evento;
 
 import java.io.BufferedReader;
@@ -15,7 +20,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,10 +38,12 @@ public class SocketClient{
 
     private final Runnable sogliaThread = () -> {
         initSocket();
-        sendUsername();
-        if(checkResponseOK()) {
-            richiestaSoglia();
-            leggiSoglia();
+        if(socket.isConnected()) {
+            sendUsername();
+            if (checkResponseOK()) {
+                richiestaSoglia();
+                leggiSoglia();
+            }
         }
         socket = null;
     };
@@ -42,12 +51,22 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.17.148.253");
-                socket = new Socket(serverAddress,8080);
+                InetAddress serverAddress = InetAddress.getByName("172.17.159.77");
+                socket = new Socket();
+                SocketAddress socketAddress = new InetSocketAddress(serverAddress,8080);
+                socket.connect(socketAddress,2000);
                 writer = new PrintWriter(socket.getOutputStream(),true);
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             } catch (IOException e) {
                 e.printStackTrace();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "connessione al server fallita", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context,HomePage.class);
+                        context.startActivity(intent);
+                    }
+                });
             }
         }
     }
@@ -129,13 +148,15 @@ public class SocketClient{
     public void startEventiViciniRequest(Location location, Set<Evento> eventoSet) {
         Runnable eventiViciniThread = () -> {
             initSocket();
-            sendUsername();
-            if(checkResponseOK()) {
-                richiestaLista();
-                if(checkResponseOK()) {
-                    writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
-                    eventoSet.addAll(deserializeEvento());
+            if(socket.isConnected()) {
+                sendUsername();
+                if (checkResponseOK()) {
+                    richiestaLista();
+                    if (checkResponseOK()) {
+                        writer.println(getUsernameFromPreferences() + ";" + location.getLatitude() + ";" + location.getLongitude());
+                        eventoSet.addAll(deserializeEvento());
 
+                    }
                 }
             }
             socket = null;
@@ -146,20 +167,22 @@ public class SocketClient{
     public void startEventoRequest(Evento evento) {
         Runnable eventoThread = () -> {
             initSocket();
-            sendUsername();
-            if(checkResponseOK()) {
-                richiestaEvento();
-                if(checkResponseOK()) {
-                    writer.println(getUsernameFromPreferences() + ";" + evento.toStringForSocket());
-                    try {
-                        String tipoEvento = reader.readLine();
-                        Log.d("tipo evento",tipoEvento);
-                        evento.setTipoEvento(tipoEvento);
-                        Evento.EventoListClass.getEventoListRilevazione().add(evento);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if(socket.isConnected()) {
+                sendUsername();
+                if (checkResponseOK()) {
+                    richiestaEvento();
+                    if (checkResponseOK()) {
+                        writer.println(getUsernameFromPreferences() + ";" + evento.toStringForSocket());
+                        try {
+                            String tipoEvento = reader.readLine();
+                            Log.d("tipo evento", tipoEvento);
+                            evento.setTipoEvento(tipoEvento);
+                            Evento.EventoListClass.getEventoListRilevazione().add(evento);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        socket = null;
                     }
-                    socket = null;
                 }
             }
         };
