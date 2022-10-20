@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
         textHome.append(" " + username);
         Button rilevaButton = view.findViewById(R.id.rilevaButton);
         SocketClient socketClient = new SocketClient(getContext());
-        if(socketClient.checkConnectivityService()) {
+        if(socketClient.checkNetworkInfoIsNull()) {
             rilevaButton.setEnabled(false);
             Toast.makeText(getContext(), "Nessuna connessione ad internet", Toast.LENGTH_SHORT).show();
         }else {

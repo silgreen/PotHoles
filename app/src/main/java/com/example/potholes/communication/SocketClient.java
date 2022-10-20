@@ -188,7 +188,7 @@ public class SocketClient{
         new Thread(eventoThread).start();
     }
 
-    public boolean checkConnectivityService() {
+    public boolean checkNetworkInfoIsNull() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo == null;
