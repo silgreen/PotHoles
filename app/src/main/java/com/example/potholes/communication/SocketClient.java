@@ -189,6 +189,9 @@ public class SocketClient{
     }
 
     public boolean checkNetworkInfoIsNull() {
+        /*
+            Controlla la presenza di connessione ad internet
+         */
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo == null;
