@@ -50,7 +50,7 @@ public class SocketClient{
     private void initSocket() {
         if(socket == null) {
             try {
-                InetAddress serverAddress = InetAddress.getByName("172.17.159.77");
+                InetAddress serverAddress = InetAddress.getByName("172.27.1.221");
                 socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress(serverAddress,8080);
                 socket.connect(socketAddress,8000);

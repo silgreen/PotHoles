@@ -10,10 +10,10 @@ public class EventiViciniService {
     private static EventiViciniService instance = null;
     private final PosizioneService posizioneService;
     private final SocketClient socketClient;
-    private static Set<Evento> eventoList;
+    private static Set<Evento> eventoSet;
 
-    public Set<Evento> getEventoList() {
-        return eventoList;
+    public Set<Evento> getEventoSet() {
+        return eventoSet;
     }
 
     public static EventiViciniService getInstance(PosizioneService posizioneService, SocketClient socketClient) {
@@ -24,7 +24,7 @@ public class EventiViciniService {
     }
 
     private EventiViciniService(PosizioneService posizioneService, SocketClient socketClient) {
-        if(eventoList == null) eventoList = new HashSet<>();
+        if(eventoSet == null) eventoSet = new HashSet<>();
         this.posizioneService = posizioneService;
         this.socketClient = socketClient;
     }
@@ -38,7 +38,7 @@ public class EventiViciniService {
                     e.printStackTrace();
                 }
             }
-            socketClient.startEventiViciniRequest(posizioneService.getPosizione(),eventoList);
+            socketClient.startEventiViciniRequest(posizioneService.getPosizione(), eventoSet);
         }
     }
 

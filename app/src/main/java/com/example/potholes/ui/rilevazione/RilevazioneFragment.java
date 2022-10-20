@@ -55,4 +55,10 @@ public class RilevazioneFragment extends Fragment {
                 setReorderingAllowed(true).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit());
         return view;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Evento.EventoListClass.clearEventoList();
+    }
 }

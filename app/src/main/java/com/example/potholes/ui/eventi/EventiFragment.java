@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,15 +12,10 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.potholes.R;
 import com.example.potholes.communication.SocketClient;
-import com.example.potholes.entity.Evento;
 import com.example.potholes.services.EventiViciniService;
 import com.example.potholes.services.PosizioneService;
-import com.example.potholes.ui.loading.LoadingFragmentDirections;
-
-import java.util.Set;
 
 public class EventiFragment extends Fragment {
     private PosizioneService posizioneService;
@@ -45,14 +39,13 @@ public class EventiFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventi);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         EventiViciniService eventiViciniService = EventiViciniService.getInstance(posizioneService, socketClient);
-        EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniService.getEventoList());
+        EventiAdapter eventiAdapter = new EventiAdapter(eventiViciniService.getEventoSet());
         recyclerView.setAdapter(eventiAdapter);
-        if(eventiViciniService.getEventoList().isEmpty()) {
+        if(eventiViciniService.getEventoSet().isEmpty()) {
             NavDirections navDirections = EventiFragmentDirections.actionNavigationEventiToLoadingFragment();
             if(container != null)
                 Navigation.findNavController(container).navigate(navDirections);
         }
-
         onBackPressedCallback.setEnabled(true);
         if(getActivity() != null)
             requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(),onBackPressedCallback);
@@ -60,10 +53,9 @@ public class EventiFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Set<Evento> eventoList = EventiViciniService.getInstance(posizioneService,socketClient).getEventoList();
-        if(!eventoList.isEmpty()) eventoList.clear();
+    public void onPause() {
+        super.onPause();
+        EventiViciniService.getInstance(posizioneService,socketClient).getEventoSet().clear();
         onBackPressedCallback.setEnabled(false);
     }
 }

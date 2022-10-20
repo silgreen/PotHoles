@@ -41,6 +41,10 @@ public class Evento {
     public static class EventoListClass {
         private static List<Evento> eventoListRilevazione;
 
+        public static void clearEventoList() {
+            if(eventoListRilevazione != null && !eventoListRilevazione.isEmpty()) eventoListRilevazione.clear();
+        }
+
         private static void initEventoListRilevazione() {
             eventoListRilevazione = new ArrayList<>();
         }

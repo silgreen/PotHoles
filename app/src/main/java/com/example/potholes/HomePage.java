@@ -22,6 +22,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.potholes.databinding.ActivityHomePageBinding;
+import com.example.potholes.entity.Evento;
+import com.example.potholes.services.EventiViciniService;
 
 public class HomePage extends AppCompatActivity {
 

@@ -30,7 +30,7 @@ public class LoadingFragment extends Fragment {
     private final Runnable changeFragment = new Runnable() {
         @Override
         public void run() {
-            if(eventiViciniService.getEventoList().isEmpty()) {
+            if(eventiViciniService.getEventoSet().isEmpty()) {
                 Toast.makeText(getContext(), "Nessun evento vicino trovato", Toast.LENGTH_SHORT).show();
                 NavDirections navDirections = LoadingFragmentDirections.actionLoadingFragmentToNavigationHome();
                 Navigation.findNavController(container).navigate(navDirections);
